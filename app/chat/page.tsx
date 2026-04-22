@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Navbar from '../../components/layout/Navbar';
 import Header from '../../components/layout/Header';
+import { jwtDecode } from "jwt-decode";
 
 interface User {
   name: string;
@@ -76,20 +77,29 @@ export default function ChatPage() {
     }
   ];
 
-  useEffect(() => {
-    const token = localStorage.getItem('auth_token');
-    const name = localStorage.getItem('user_name');
-    const email = localStorage.getItem('user_email');
-    const avatar = localStorage.getItem('user_avatar');
+useEffect(() => {
+  const token = localStorage.getItem('auth_token');
 
-    if (!token || !name || !email || !avatar) {
-      router.push('/');
-      return;
-    }
+  if (!token) {
+    router.push('/');
+    return;
+  }
 
-    setUser({ name, email, avatar });
+  try {
+    const decoded: any = jwtDecode(token);
+
+    setUser({
+      name: decoded.name,
+      email: decoded.email,
+      avatar: decoded.avatar || "https://picsum.photos/40"
+    });
+
     setMessages(mockMessages);
-  }, [router]);
+  } catch (error) {
+    console.log("Invalid token");
+    router.push('/');
+  }
+}, [router]);
 
   const handleSendMessage = () => {
     if (message.trim()) {

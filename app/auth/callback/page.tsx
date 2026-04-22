@@ -7,28 +7,22 @@ export default function AuthCallback() {
   const router = useRouter();
 
   useEffect(() => {
-    const handleAuthCallback = async () => {
+    const handleAuthCallback = () => {
       try {
         const urlParams = new URLSearchParams(window.location.search);
-        const code = urlParams.get('code');
+        const token = urlParams.get('token');
         const error = urlParams.get('error');
 
         if (error) {
           throw new Error(error);
         }
 
-        if (!code) {
-          throw new Error('No authorization code received');
+        if (!token) {
+          throw new Error('No token received');
         }
 
-        // Mock authentication - simulate successful auth
-        await new Promise(resolve => setTimeout(resolve, 1500));
-
-        // Store mock user data in localStorage instead of cookies
-        localStorage.setItem('auth_token', 'mock_token_' + Date.now());
-        localStorage.setItem('user_avatar', 'https://picsum.photos/seed/farooq/40/40.jpg');
-        localStorage.setItem('user_name', 'Farooq Huzaifa');
-        localStorage.setItem('user_email', 'farooq.huzaifa@example.com');
+        // ✅ Store real JWT token
+        localStorage.setItem('auth_token', token);
 
         router.push('/chat');
       } catch (error) {

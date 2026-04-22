@@ -5,14 +5,10 @@ import { useState } from 'react';
 export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleGoogleSignIn = async () => {
-    setIsLoading(true);
-    
-    // Mock sign-in - redirect to callback page
-    setTimeout(() => {
-      window.location.href = '/auth/callback?code=mock_auth_code';
-    }, 1000);
-  };
+const handleGoogleSignIn = () => {
+  window.location.href =
+    "https://ai-realtime-chat-backend-4r7n.onrender.com/auth/google";
+};
 
   return (
     <div className="min-h-screen bg-white flex flex-col items-center justify-center px-4">
