@@ -2,39 +2,39 @@
 
 import { useState } from "react";
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
+
 export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false);
 
   const handleGoogleSignIn = () => {
     setIsLoading(true);
 
-    window.location.href =
-      "https://ai-realtime-chat-backend-4r7n.onrender.com/auth/google";
+    window.location.href = `${API_URL}/auth/google`;
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-slate-100 flex items-center justify-center px-4">
-      <div className="w-full max-w-md bg-white rounded-3xl shadow-xl border border-gray-200 p-8">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-slate-100 flex items-center justify-center px-4 py-8">
+      <div className="w-full max-w-md bg-white rounded-3xl shadow-xl border border-gray-200 p-6 sm:p-8">
         <div className="flex flex-col items-center text-center mb-8">
-  <div className="w-10 h-10 rounded-xl bg-blue-500 flex items-center justify-center text-white font-bold">
+          <div className="w-16 h-16 rounded-2xl bg-blue-500 flex items-center justify-center text-white font-bold text-2xl shadow-md mb-5">
             AI
           </div>
 
-          <h1 className="text-4xl font-bold text-gray-900">
+          <h1 className="text-3xl sm:text-4xl font-bold text-gray-900">
             AI Real Chat
           </h1>
 
-          <p className="text-gray-600 mt-3 leading-relaxed">
-            Smart real-time messaging with beautiful
-            conversations, AI replies, and modern team
-            communication.
+          <p className="text-sm sm:text-base text-gray-600 mt-3 leading-relaxed max-w-sm">
+            Smart real-time messaging with beautiful conversations,
+            AI replies, and modern team communication.
           </p>
         </div>
 
         <button
           onClick={handleGoogleSignIn}
           disabled={isLoading}
-          className="w-full flex items-center justify-center gap-3 px-4 py-3 rounded-xl border border-gray-300 bg-white hover:bg-gray-50 transition font-medium shadow-sm disabled:opacity-70 disabled:cursor-not-allowed"
+          className="w-full flex items-center justify-center gap-3 px-4 py-3 rounded-xl border border-gray-300 bg-white hover:bg-gray-50 transition-all duration-200 font-medium shadow-sm disabled:opacity-70 disabled:cursor-not-allowed hover:shadow-md"
         >
           <svg
             width="20"
@@ -61,17 +61,15 @@ export default function LoginPage() {
             />
           </svg>
 
-          <span className="text-gray-800">
-            {isLoading
-              ? "Signing in..."
-              : "Continue with Google"}
+          <span className="text-gray-800 text-sm sm:text-base">
+            {isLoading ? "Signing in..." : "Continue with Google"}
           </span>
         </button>
 
         <div className="mt-8 text-center">
-          <p className="text-xs text-gray-500 uppercase tracking-wider leading-relaxed">
-            By continuing, you agree to our Terms of
-            Service and Privacy Policy.
+          <p className="text-[11px] sm:text-xs text-gray-500 uppercase tracking-wider leading-relaxed">
+            By continuing, you agree to our Terms of Service
+            and Privacy Policy.
           </p>
         </div>
       </div>

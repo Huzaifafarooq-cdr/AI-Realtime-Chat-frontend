@@ -47,15 +47,6 @@ export default function Header({ user }: HeaderProps) {
             className="w-10 h-10 rounded-full border"
           />
 
-          <span
-            className={`px-3 py-1 rounded-full text-xs font-semibold ${
-              user.isPremium
-                ? "bg-yellow-400 text-white"
-                : "bg-gray-200 text-gray-700"
-            }`}
-          >
-            {user.isPremium ? "Premium" : "Free"}
-          </span>
         </div>
       </div>
     </header>
