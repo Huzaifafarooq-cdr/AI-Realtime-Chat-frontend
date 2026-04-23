@@ -166,17 +166,29 @@ export default function ChatPage() {
       try {
         const decoded: any = jwtDecode(token);
 
-        const currentUser: User = {
-          id: decoded.id || decoded._id,
-          name: decoded.name,
-          email: decoded.email,
-          avatar:
-            decoded.avatar ||
-            `https://ui-avatars.com/api/?name=${encodeURIComponent(
-              decoded.name
-            )}`,
-          isPremium: decoded.isPremium,
-        };
+   const currentUser: User = {
+  id: decoded.id || decoded._id,
+  name:
+    decoded.name ||
+    decoded.displayName ||
+    decoded.fullName ||
+    decoded.username ||
+    decoded.email?.split("@")[0] ||
+    "User",
+  email: decoded.email || "",
+  avatar:
+    decoded.avatar ||
+    decoded.picture ||
+    `https://ui-avatars.com/api/?name=${encodeURIComponent(
+      decoded.name ||
+      decoded.displayName ||
+      decoded.fullName ||
+      decoded.username ||
+      decoded.email?.split("@")[0] ||
+      "User"
+    )}`,
+  isPremium: decoded.isPremium,
+};
 
         setUser(currentUser);
 
