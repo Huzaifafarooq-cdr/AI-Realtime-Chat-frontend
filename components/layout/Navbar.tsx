@@ -109,7 +109,7 @@ export default function Navbar({
           filteredChats.map((chat) => (
             <div
               key={chat.id}
-              onClick={() => onChatSelect(chat)}
+              onClick={() => onChatSelect(chat.id)}
               className={`flex items-center gap-3 p-4 cursor-pointer hover:bg-gray-50 ${
                 selectedChat === chat.id ? "bg-blue-50" : ""
               }`}

@@ -263,16 +263,19 @@ export default function ChatPage() {
   // =====================================================
   // START CHAT FROM USERS TAB
   // =====================================================
-  const handleSelectUser = (chatUser: ChatItem) => {
-    const exists = chats.find((item) => item.id === chatUser.id);
+const handleSelectUser = (chatId: string) => {
+  const selectedUser = users.find((u) => u.id === chatId);
+  if (!selectedUser) return;
 
-    if (!exists) {
-      setChats((prev) => [chatUser, ...prev]);
-    }
+  const exists = chats.find((c) => c.id === chatId);
 
-    setSelectedChat(chatUser.id);
-    setActiveTab("chats");
-  };
+  if (!exists) {
+    setChats((prev) => [selectedUser, ...prev]);
+  }
+
+  setSelectedChat(chatId);
+  setActiveTab("chats");
+};
 
   // =====================================================
   // SELECT CHAT FROM CHAT TAB
