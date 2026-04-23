@@ -60,8 +60,8 @@ public/
 
 Create a .env.local file:
 ```bash
-NEXT_PUBLIC_API_URL=https://your-backend-url.onrender.com/api
-NEXT_PUBLIC_GOOGLE_AUTH_URL=https://your-backend-url.onrender.com/auth/google
+NEXT_PUBLIC_API_URL=https://ai-realtime-chat-backend-4r7n.onrender.com
+NEXT_PUBLIC_SOCKET_URL=https://ai-realtime-chat-backend-4r7n.onrender.com
 NEXT_PUBLIC_RAZORPAY_KEY_ID=your_key_here
 ```
 
@@ -85,43 +85,56 @@ npm run build
 ```bash
 npm start
 ```
-Main Pages
-Login Page
-Google OAuth Sign In
-Clean responsive UI
-Chat Page
-Real-time Messaging
-Sidebar Users & Chats
-AI Suggestion Button
-Premium Badge
-Scrollable Chat Area
-Header
+## Main Pages
+
+### Login Page
+- Google OAuth Sign In
+- Clean responsive UI
+
+### Chat Page
+- Real-time Messaging
+- Sidebar Users & Chats
+- AI Suggestion Button
+- Premium Badge
+- Scrollable Chat Area
+
+### Header
 
 Displays logged-in user:
 
-Name
-Email
-Avatar
-Real-Time Features
+- Name
+- Email
+- Avatar
+
+---
+
+## Real-Time Features
 
 Socket.IO is used for:
 
-Sending messages
-Receiving messages
-AI suggestions
-Premium updates after payment
-Payment Flow
+- Sending messages
+- Receiving messages
+- AI suggestions
+- Premium updates after payment
+
+---
+
+## Payment Flow
 
 Free users can upgrade to Premium using Razorpay:
 
-Create Order
-Open Checkout
-Payment Success
-Premium Activated Instantly
-Future Improvements
-Redux Toolkit
-Group Chat
-Notifications
-Typing Indicator
-File Sharing
-Dark Mode
+1. Create Order
+2. Open Checkout
+3. Payment Success
+4. Premium Activated Instantly
+
+---
+
+## Future Improvements
+
+- Redux Toolkit
+- Group Chat
+- Notifications
+- Typing Indicator
+- File Sharing
+- Dark Mode
