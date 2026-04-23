@@ -87,20 +87,7 @@ export default function Navbar({
         </div>
       </div>
 
-      {/* Search */}
-      <div className="px-4 pt-4">
-        <input
-          type="text"
-          placeholder={
-            activeTab === "chats"
-              ? "Search conversations..."
-              : "Search users..."
-          }
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          className="w-full px-4 py-2.5 bg-gray-100 rounded-xl text-sm outline-none focus:ring-2 focus:ring-blue-500"
-        />
-      </div>
+
 
       {/* List */}
       <div className="flex-1 overflow-y-auto mt-4">
