@@ -50,7 +50,6 @@ export default function ChatPage() {
   const [premium, setPremium] = useState(false);
   const [suggestions, setSuggestions] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
-  const [showPopup, setShowPopup] = useState(false);
 
   const formatTime = (date: string) =>
     new Date(date).toLocaleTimeString([], {
@@ -146,7 +145,7 @@ export default function ChatPage() {
       } else {
         setMessages([]);
       }
-    } catch (error) {
+    } catch {
       setMessages([]);
     }
   };
@@ -186,7 +185,6 @@ export default function ChatPage() {
 
         socket.on("premium_status", (data: any) => {
           setPremium(data.isPremium);
-          if (data.isPremium) setShowPopup(false);
         });
 
         socket.on("message_sent", (data: any) => {
@@ -313,7 +311,7 @@ export default function ChatPage() {
 
   const handleSuggestions = () => {
     if (!premium) {
-      setShowPopup(true);
+      window.location.href = "/payment";
       return;
     }
 
@@ -324,10 +322,6 @@ export default function ChatPage() {
     });
   };
 
-  const openPaymentPage = () => {
-    window.location.href = "/payment";
-  };
-
   if (loading || !user) {
     return (
       <div className="min-h-screen flex items-center justify-center text-gray-800 text-lg font-semibold bg-white">
@@ -336,8 +330,7 @@ export default function ChatPage() {
     );
   }
 
-  const currentList =
-    activeTab === "chats" ? chats : users;
+  const currentList = activeTab === "chats" ? chats : users;
 
   const currentChat = [...chats, ...users].find(
     (item) => item.id === selectedChat
@@ -482,41 +475,6 @@ export default function ChatPage() {
           </div>
         </div>
       </div>
-
-      {showPopup && (
-        <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center px-4">
-          <div className="w-full max-w-md bg-white rounded-2xl shadow-2xl p-6">
-            <div className="text-center">
-              <div className="text-4xl mb-3">✨</div>
-
-              <h2 className="text-2xl font-bold text-gray-900">
-                Unlock AI Features
-              </h2>
-
-              <p className="text-gray-600 mt-2">
-                Upgrade to Premium and get smart AI reply
-                suggestions instantly.
-              </p>
-
-              <div className="mt-6 space-y-3">
-                <button
-                  onClick={openPaymentPage}
-                  className="w-full bg-blue-500 hover:bg-blue-600 text-white py-3 rounded-xl font-semibold transition"
-                >
-                  Upgrade Now
-                </button>
-
-                <button
-                  onClick={() => setShowPopup(false)}
-                  className="w-full bg-gray-100 hover:bg-gray-200 text-gray-800 py-3 rounded-xl font-medium transition"
-                >
-                  Maybe Later
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 }
