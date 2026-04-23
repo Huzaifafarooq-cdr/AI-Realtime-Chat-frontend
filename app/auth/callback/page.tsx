@@ -21,7 +21,6 @@ export default function AuthCallback() {
           throw new Error('No token received');
         }
 
-        // ✅ Store real JWT token
         localStorage.setItem('auth_token', token);
 
         router.push('/chat');

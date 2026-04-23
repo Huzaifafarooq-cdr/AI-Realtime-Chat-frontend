@@ -16,7 +16,6 @@ export default function AIButton({
   onLocked,
 }: Props) {
 const handleAI = async () => {
-  // Premium user
   if (isPremium) {
     if (!message.trim()) return;
 
@@ -26,7 +25,6 @@ const handleAI = async () => {
     return;
   }
 
-  // Free user => direct payment
   const loaded = await loadRazorpay();
 
   if (!loaded) {
@@ -49,7 +47,7 @@ const handleAI = async () => {
       const verify = await verifyPayment(response);
 
       if (verify.success) {
-        alert("Premium activated 🚀");
+        alert("Premium activated ");
 
         getSocket()?.emit("check_premium");
 

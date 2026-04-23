@@ -40,7 +40,7 @@ export default function Navbar({
   const [searchQuery, setSearchQuery] = useState("");
 
   const filteredChats = chats.filter((chat) =>
-    chat.name.toLowerCase().includes(searchQuery.toLowerCase())
+    chat.name.toLowerCase().includes(searchQuery.toLowerCase()),
   );
 
   const handleLogout = () => {
@@ -50,17 +50,12 @@ export default function Navbar({
 
   return (
     <div className="w-80 bg-white border-r border-gray-200 flex flex-col">
-      {/* Title */}
+
       <div className="px-4 pt-5">
-        <h2 className="text-xl font-semibold text-gray-900">
-          Messages
-        </h2>
-        <p className="text-xs text-gray-500 mt-1">
-          Manage chats and users
-        </p>
+        <h2 className="text-xl font-semibold text-gray-900">Messages</h2>
+        <p className="text-xs text-gray-500 mt-1">Manage chats and users</p>
       </div>
 
-      {/* Tabs */}
       <div className="px-4 pt-4">
         <div className="flex gap-6 border-b border-gray-100">
           <button
@@ -87,15 +82,10 @@ export default function Navbar({
         </div>
       </div>
 
-
-
-      {/* List */}
       <div className="flex-1 overflow-y-auto mt-4">
         {filteredChats.length === 0 ? (
           <p className="text-center text-sm text-gray-400 mt-8">
-            {activeTab === "chats"
-              ? "No chats yet"
-              : "No users found"}
+            {activeTab === "chats" ? "No chats yet" : "No users found"}
           </p>
         ) : (
           filteredChats.map((chat) => (
@@ -103,9 +93,7 @@ export default function Navbar({
               key={chat.id}
               onClick={() => onChatSelect(chat.id)}
               className={`flex items-center gap-3 px-4 py-3 cursor-pointer transition ${
-                selectedChat === chat.id
-                  ? "bg-blue-50"
-                  : "hover:bg-gray-50"
+                selectedChat === chat.id ? "bg-blue-50" : "hover:bg-gray-50"
               }`}
             >
               <img
@@ -121,17 +109,13 @@ export default function Navbar({
                   </p>
 
                   {activeTab === "chats" && chat.time && (
-                    <span className="text-xs text-gray-400">
-                      {chat.time}
-                    </span>
+                    <span className="text-xs text-gray-400">{chat.time}</span>
                   )}
                 </div>
 
                 <p
                   className={`text-sm truncate ${
-                    activeTab === "users"
-                      ? "text-green-500"
-                      : "text-gray-500"
+                    activeTab === "users" ? "text-green-500" : "text-gray-500"
                   }`}
                 >
                   {activeTab === "users"
@@ -150,7 +134,6 @@ export default function Navbar({
         )}
       </div>
 
-      {/* Footer User */}
       <div className="p-4 border-t border-gray-200 bg-gray-50">
         <div className="flex items-center gap-3">
           <img
@@ -163,18 +146,16 @@ export default function Navbar({
             <p className="font-medium text-sm text-gray-900 truncate">
               {user.name}
             </p>
-            <p className="text-xs text-gray-500 truncate">
-              {user.email}
-            </p>
+            <p className="text-xs text-gray-500 truncate">{user.email}</p>
           </div>
 
-<button
-  onClick={handleLogout}
-  title="Logout"
-  className="w-10 h-10 flex items-center justify-center rounded-full bg-gradient-to-r from-red-500 to-pink-500 text-white shadow-md hover:shadow-lg hover:scale-110 hover:from-red-600 hover:to-pink-600 transition-all duration-200"
->
-  ↗
-</button>
+          <button
+            onClick={handleLogout}
+            title="Logout"
+            className="w-10 h-10 flex items-center justify-center rounded-full bg-gradient-to-r from-red-500 to-pink-500 text-white shadow-md hover:shadow-lg hover:scale-110 hover:from-red-600 hover:to-pink-600 transition-all duration-200"
+          >
+            ↗
+          </button>
         </div>
       </div>
     </div>

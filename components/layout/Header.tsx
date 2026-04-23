@@ -19,7 +19,6 @@ export default function Header({ user }: HeaderProps) {
   return (
     <header className="w-full bg-white border-b border-gray-200 px-4 sm:px-6 py-4 shadow-sm">
       <div className="flex items-center justify-between gap-4">
-        {/* Left Side - Brand */}
         <div className="flex items-center gap-3 min-w-0">
           <div className="w-10 h-10 rounded-xl bg-blue-500 flex items-center justify-center text-white font-bold text-lg shrink-0">
             AI
@@ -36,7 +35,6 @@ export default function Header({ user }: HeaderProps) {
           </div>
         </div>
 
-        {/* Right Side - User Info */}
         <div className="flex items-center gap-3 min-w-0">
           {/* Text */}
           <div className="text-right min-w-0 hidden sm:block">
@@ -49,7 +47,6 @@ export default function Header({ user }: HeaderProps) {
             </p>
           </div>
 
-          {/* Avatar */}
           <img
             src={user.avatar}
             alt={user.name}

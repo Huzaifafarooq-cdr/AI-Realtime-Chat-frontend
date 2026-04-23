@@ -1,6 +1,6 @@
 export const APP_CONFIG = {
-  name: 'Nexus',
-  description: 'Beautiful communication for modern teams',
+  name: 'AI Real Chat',
+  description: 'Smart real-time messagin',
   version: '1.0.0',
 } as const;
 

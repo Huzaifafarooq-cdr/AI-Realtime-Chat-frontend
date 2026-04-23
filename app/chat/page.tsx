@@ -104,9 +104,7 @@ export default function ChatPage() {
           name: item.name,
           avatar:
             item.avatar ||
-            `https://ui-avatars.com/api/?name=${encodeURIComponent(
-              item.name
-            )}`,
+            `https://ui-avatars.com/api/?name=${encodeURIComponent(item.name)}`,
           lastMessage: "",
           time: "",
           unread: 0,
@@ -137,10 +135,7 @@ export default function ChatPage() {
         const formatted = data.messages.map((item: any) => ({
           id: item._id,
           text: item.message,
-          sender:
-            String(item.senderId) === String(user?.id)
-              ? "user"
-              : "other",
+          sender: String(item.senderId) === String(user?.id) ? "user" : "other",
           timestamp: formatTime(item.createdAt),
         }));
 
@@ -166,29 +161,29 @@ export default function ChatPage() {
       try {
         const decoded: any = jwtDecode(token);
 
-   const currentUser: User = {
-  id: decoded.id || decoded._id,
-  name:
-    decoded.name ||
-    decoded.displayName ||
-    decoded.fullName ||
-    decoded.username ||
-    decoded.email?.split("@")[0] ||
-    "User",
-  email: decoded.email || "",
-  avatar:
-    decoded.avatar ||
-    decoded.picture ||
-    `https://ui-avatars.com/api/?name=${encodeURIComponent(
-      decoded.name ||
-      decoded.displayName ||
-      decoded.fullName ||
-      decoded.username ||
-      decoded.email?.split("@")[0] ||
-      "User"
-    )}`,
-  isPremium: decoded.isPremium,
-};
+        const currentUser: User = {
+          id: decoded.id || decoded._id,
+          name:
+            decoded.name ||
+            decoded.displayName ||
+            decoded.fullName ||
+            decoded.username ||
+            decoded.email?.split("@")[0] ||
+            "User",
+          email: decoded.email || "",
+          avatar:
+            decoded.avatar ||
+            decoded.picture ||
+            `https://ui-avatars.com/api/?name=${encodeURIComponent(
+              decoded.name ||
+                decoded.displayName ||
+                decoded.fullName ||
+                decoded.username ||
+                decoded.email?.split("@")[0] ||
+                "User",
+            )}`,
+          isPremium: decoded.isPremium,
+        };
 
         setUser(currentUser);
 
@@ -328,7 +323,7 @@ export default function ChatPage() {
 
   const handleSuggestions = () => {
     if (!premium) {
-      alert("Upgrade to Premium to unlock AI suggestions 🚀");
+      alert("Upgrade to Premium to unlock AI suggestions");
       return;
     }
 
@@ -347,11 +342,10 @@ export default function ChatPage() {
     );
   }
 
-  const currentList =
-    activeTab === "chats" ? chats : users;
+  const currentList = activeTab === "chats" ? chats : users;
 
   const currentChat = [...chats, ...users].find(
-    (item) => item.id === selectedChat
+    (item) => item.id === selectedChat,
   );
 
   return (
@@ -366,9 +360,7 @@ export default function ChatPage() {
           activeTab={activeTab}
           setActiveTab={setActiveTab}
           onChatSelect={
-            activeTab === "users"
-              ? handleSelectUser
-              : handleSelectChat
+            activeTab === "users" ? handleSelectUser : handleSelectChat
           }
         />
 
@@ -394,7 +386,7 @@ export default function ChatPage() {
 
             {premium ? (
               <span className="px-4 py-2 rounded-full text-sm font-semibold bg-gradient-to-r from-yellow-400 to-orange-500 text-white shadow">
-                ⭐ Premium User
+                 Premium User
               </span>
             ) : (
               <span className="px-4 py-2 rounded-full text-sm font-semibold bg-gray-200 text-gray-700 border">
@@ -408,16 +400,14 @@ export default function ChatPage() {
             <div className="max-w-3xl mx-auto space-y-4">
               {messages.length === 0 ? (
                 <p className="text-center text-gray-400">
-                  No messages yet. Start chatting 🚀
+                  No messages yet. Start chatting now!
                 </p>
               ) : (
                 messages.map((msg) => (
                   <div
                     key={msg.id}
                     className={`flex ${
-                      msg.sender === "user"
-                        ? "justify-end"
-                        : "justify-start"
+                      msg.sender === "user" ? "justify-end" : "justify-start"
                     }`}
                   >
                     <div
@@ -428,9 +418,7 @@ export default function ChatPage() {
                       }`}
                     >
                       <p>{msg.text}</p>
-                      <p className="text-xs mt-1 opacity-70">
-                        {msg.timestamp}
-                      </p>
+                      <p className="text-xs mt-1 opacity-70">{msg.timestamp}</p>
                     </div>
                   </div>
                 ))
@@ -462,9 +450,7 @@ export default function ChatPage() {
                   type="text"
                   value={message}
                   onChange={(e) => setMessage(e.target.value)}
-                  onKeyDown={(e) =>
-                    e.key === "Enter" && handleSendMessage()
-                  }
+                  onKeyDown={(e) => e.key === "Enter" && handleSendMessage()}
                   placeholder="Type a message..."
                   className="flex-1 px-4 py-2 bg-gray-100 rounded-full text-black placeholder:text-gray-400 outline-none focus:ring-2 focus:ring-blue-500"
                 />
@@ -472,9 +458,7 @@ export default function ChatPage() {
                 <div
                   onClick={handleSuggestions}
                   className={`transition transform hover:scale-110 ${
-                    premium
-                      ? "cursor-pointer"
-                      : "cursor-not-allowed opacity-80"
+                    premium ? "cursor-pointer" : "cursor-not-allowed opacity-80"
                   }`}
                   title={
                     premium
@@ -482,10 +466,7 @@ export default function ChatPage() {
                       : "Upgrade to Premium"
                   }
                 >
-                  <AIButton
-                    isPremium={premium}
-                    message={message}
-                  />
+                  <AIButton isPremium={premium} message={message} />
                 </div>
 
                 <button
