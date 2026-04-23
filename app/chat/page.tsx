@@ -54,18 +54,12 @@ export default function ChatPage() {
   const [suggestions, setSuggestions] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
 
-  // =====================================================
-  // HELPERS
-  // =====================================================
   const formatTime = (date: string) =>
     new Date(date).toLocaleTimeString([], {
       hour: "2-digit",
       minute: "2-digit",
     });
 
-  // =====================================================
-  // LOAD SIDEBAR CHATS
-  // =====================================================
   const loadSidebarChats = async () => {
     try {
       const token = localStorage.getItem("auth_token");
@@ -92,9 +86,6 @@ export default function ChatPage() {
     }
   };
 
-  // =====================================================
-  // LOAD USERS
-  // =====================================================
   const loadUsers = async () => {
     try {
       const token = localStorage.getItem("auth_token");
@@ -128,9 +119,6 @@ export default function ChatPage() {
     }
   };
 
-  // =====================================================
-  // LOAD MESSAGES
-  // =====================================================
   const loadMessages = async (receiverId: string) => {
     try {
       if (!receiverId) return;
@@ -166,9 +154,6 @@ export default function ChatPage() {
     }
   };
 
-  // =====================================================
-  // INIT APP
-  // =====================================================
   useEffect(() => {
     const token = localStorage.getItem("auth_token");
 
@@ -206,52 +191,50 @@ export default function ChatPage() {
           setPremium(data.isPremium);
         });
 
-  socket.on("message_sent", (data: any) => {
-  setMessages((prev) => {
-    const exists = prev.some((msg) => msg.id === data._id);
+        socket.on("message_sent", (data: any) => {
+          setMessages((prev) => {
+            const exists = prev.some((msg) => msg.id === data._id);
+            if (exists) return prev;
 
-    if (exists) return prev;
+            return [
+              ...prev,
+              {
+                id: data._id,
+                text: data.message,
+                sender: "user",
+                timestamp: formatTime(data.createdAt),
+              },
+            ];
+          });
 
-    return [
-      ...prev,
-      {
-        id: data._id,
-        text: data.message,
-        sender: "user",
-        timestamp: formatTime(data.createdAt),
-      },
-    ];
-  });
+          loadSidebarChats();
+        });
 
-  loadSidebarChats();
-});
+        socket.on("receive_message", (data: any) => {
+          setMessages((prev) => {
+            const exists = prev.some((msg) => msg.id === data._id);
+            if (exists) return prev;
 
-    socket.on("receive_message", (data: any) => {
-  setMessages((prev) => {
-    const exists = prev.some((msg) => msg.id === data._id);
+            if (
+              String(data.senderId) === String(selectedChat) ||
+              String(data.receiverId) === String(selectedChat)
+            ) {
+              return [
+                ...prev,
+                {
+                  id: data._id,
+                  text: data.message,
+                  sender: "other",
+                  timestamp: formatTime(data.createdAt),
+                },
+              ];
+            }
 
-    if (exists) return prev;
+            return prev;
+          });
 
-    if (
-      String(data.senderId) === String(selectedChat) ||
-      String(data.receiverId) === String(selectedChat)
-    ) {
-      return [
-        ...prev,
-        {
-          id: data._id,
-          text: data.message,
-          sender: "other",
-          timestamp: formatTime(data.createdAt),
-        },
-      ];
-    }
-
-    return prev;
-  });
-
-  loadSidebarChats();
-});
+          loadSidebarChats();
+        });
 
         socket.on("suggestions", (data: any) => {
           setSuggestions(Array.isArray(data) ? data : [data]);
@@ -266,25 +249,16 @@ export default function ChatPage() {
     init();
   }, [router, selectedChat]);
 
-  // =====================================================
-  // LOAD CHAT HISTORY
-  // =====================================================
   useEffect(() => {
     if (selectedChat && user) {
       loadMessages(selectedChat);
     }
   }, [selectedChat, user]);
 
-  // =====================================================
-  // AUTO SCROLL
-  // =====================================================
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  // =====================================================
-  // AUTO AI SUGGESTIONS (DEBOUNCE)
-  // =====================================================
   useEffect(() => {
     if (!premium) return;
     if (!message.trim()) {
@@ -309,9 +283,6 @@ export default function ChatPage() {
     };
   }, [message, premium]);
 
-  // =====================================================
-  // SELECT USER
-  // =====================================================
   const handleSelectUser = (chatId: string) => {
     const selectedUser = users.find((u) => u.id === chatId);
     if (!selectedUser) return;
@@ -326,32 +297,23 @@ export default function ChatPage() {
     setActiveTab("chats");
   };
 
-  // =====================================================
-  // SELECT CHAT
-  // =====================================================
   const handleSelectChat = (chatId: string) => {
     setSelectedChat(chatId);
     setActiveTab("chats");
   };
 
-  // =====================================================
-  // SEND MESSAGE
-  // =====================================================
- const handleSendMessage = () => {
-  if (!message.trim() || !selectedChat) return;
+  const handleSendMessage = () => {
+    if (!message.trim() || !selectedChat) return;
 
-  getSocket()?.emit("send_message", {
-    receiverId: selectedChat,
-    message,
-  });
+    getSocket()?.emit("send_message", {
+      receiverId: selectedChat,
+      message,
+    });
 
-  setMessage("");
-  setSuggestions([]);
-};
+    setMessage("");
+    setSuggestions([]);
+  };
 
-  // =====================================================
-  // MANUAL AI CLICK (FREE USER)
-  // =====================================================
   const handleSuggestions = () => {
     if (!premium) {
       alert("Upgrade to Premium to unlock AI suggestions 🚀");
@@ -365,9 +327,6 @@ export default function ChatPage() {
     });
   };
 
-  // =====================================================
-  // LOADING
-  // =====================================================
   if (loading || !user) {
     return (
       <div className="min-h-screen flex items-center justify-center text-lg">
@@ -383,14 +342,11 @@ export default function ChatPage() {
     (item) => item.id === selectedChat
   );
 
-  // =====================================================
-  // UI
-  // =====================================================
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col">
+    <div className="h-screen overflow-hidden bg-gray-50 flex flex-col">
       <Header user={user} />
 
-      <div className="flex flex-1">
+      <div className="flex flex-1 overflow-hidden">
         <Navbar
           user={user}
           chats={currentList}
@@ -404,7 +360,7 @@ export default function ChatPage() {
           }
         />
 
-        <div className="flex-1 flex flex-col">
+        <div className="flex-1 flex flex-col overflow-hidden">
           {/* Header */}
           <div className="bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between">
             <div className="flex items-center gap-3">
@@ -424,13 +380,19 @@ export default function ChatPage() {
               </div>
             </div>
 
-            <span className="text-sm font-medium">
-              {premium ? "Premium User" : "Free User"}
-            </span>
+            {premium ? (
+              <span className="px-4 py-2 rounded-full text-sm font-semibold bg-gradient-to-r from-yellow-400 to-orange-500 text-white shadow">
+                ⭐ Premium User
+              </span>
+            ) : (
+              <span className="px-4 py-2 rounded-full text-sm font-semibold bg-gray-200 text-gray-700 border">
+                Free User
+              </span>
+            )}
           </div>
 
           {/* Messages */}
-          <div className="flex-1 overflow-y-auto p-6 bg-gray-50">
+          <div className="flex-1 min-h-0 overflow-y-auto p-6 bg-gray-50">
             <div className="max-w-3xl mx-auto space-y-4">
               {messages.length === 0 ? (
                 <p className="text-center text-gray-400">
@@ -492,7 +454,7 @@ export default function ChatPage() {
                     e.key === "Enter" && handleSendMessage()
                   }
                   placeholder="Type a message..."
-                  className="flex-1 px-4 py-2 bg-gray-100 rounded-full outline-none focus:ring-2 focus:ring-blue-500"
+                  className="flex-1 px-4 py-2 bg-gray-100 rounded-full text-black placeholder:text-gray-400 outline-none focus:ring-2 focus:ring-blue-500"
                 />
 
                 <div
