@@ -38,6 +38,7 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL;
 export default function ChatPage() {
   const router = useRouter();
   const bottomRef = useRef<HTMLDivElement | null>(null);
+  const debounceRef = useRef<NodeJS.Timeout | null>(null);
 
   const [user, setUser] = useState<User | null>(null);
   const [users, setUsers] = useState<ChatItem[]>([]);
@@ -268,6 +269,33 @@ export default function ChatPage() {
   }, [messages]);
 
   // =====================================================
+  // AUTO AI SUGGESTIONS (DEBOUNCE)
+  // =====================================================
+  useEffect(() => {
+    if (!premium) return;
+    if (!message.trim()) {
+      setSuggestions([]);
+      return;
+    }
+
+    if (debounceRef.current) {
+      clearTimeout(debounceRef.current);
+    }
+
+    debounceRef.current = setTimeout(() => {
+      getSocket()?.emit("get_suggestions", {
+        text: message,
+      });
+    }, 700);
+
+    return () => {
+      if (debounceRef.current) {
+        clearTimeout(debounceRef.current);
+      }
+    };
+  }, [message, premium]);
+
+  // =====================================================
   // SELECT USER
   // =====================================================
   const handleSelectUser = (chatId: string) => {
@@ -308,7 +336,7 @@ export default function ChatPage() {
   };
 
   // =====================================================
-  // AI BUTTON CLICK
+  // MANUAL AI CLICK (FREE USER)
   // =====================================================
   const handleSuggestions = () => {
     if (!premium) {
@@ -445,12 +473,9 @@ export default function ChatPage() {
                 <input
                   type="text"
                   value={message}
-                  onChange={(e) =>
-                    setMessage(e.target.value)
-                  }
+                  onChange={(e) => setMessage(e.target.value)}
                   onKeyDown={(e) =>
-                    e.key === "Enter" &&
-                    handleSendMessage()
+                    e.key === "Enter" && handleSendMessage()
                   }
                   placeholder="Type a message..."
                   className="flex-1 px-4 py-2 bg-gray-100 rounded-full outline-none focus:ring-2 focus:ring-blue-500"
@@ -458,14 +483,14 @@ export default function ChatPage() {
 
                 <div
                   onClick={handleSuggestions}
-                  className={`transition transform hover:scale-105 ${
+                  className={`transition transform hover:scale-110 ${
                     premium
                       ? "cursor-pointer"
                       : "cursor-not-allowed opacity-80"
                   }`}
                   title={
                     premium
-                      ? "Get AI Suggestions"
+                      ? "AI Auto Suggestions Enabled"
                       : "Upgrade to Premium"
                   }
                 >
