@@ -13,8 +13,8 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50 flex items-center justify-center px-4">
-      <div className="w-full max-w-md bg-white rounded-3xl shadow-xl border border-gray-100 p-8">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-slate-100 flex items-center justify-center px-4">
+      <div className="w-full max-w-md bg-white rounded-3xl shadow-xl border border-gray-200 p-8">
         <div className="flex flex-col items-center text-center mb-8">
           <div className="w-20 h-20 bg-blue-500 rounded-3xl flex items-center justify-center shadow-lg mb-6">
             <svg
@@ -35,16 +35,17 @@ export default function LoginPage() {
             AI Real Chat
           </h1>
 
-          <p className="text-gray-500 mt-3 leading-relaxed">
-            Smart real-time messaging with beautiful conversations,
-            AI replies, and modern team communication.
+          <p className="text-gray-600 mt-3 leading-relaxed">
+            Smart real-time messaging with beautiful
+            conversations, AI replies, and modern team
+            communication.
           </p>
         </div>
 
         <button
           onClick={handleGoogleSignIn}
           disabled={isLoading}
-          className="w-full flex items-center justify-center gap-3 px-4 py-3 rounded-xl border border-gray-300 bg-white hover:bg-gray-50 transition font-medium shadow-sm disabled:opacity-60 disabled:cursor-not-allowed"
+          className="w-full flex items-center justify-center gap-3 px-4 py-3 rounded-xl border border-gray-300 bg-white hover:bg-gray-50 transition font-medium shadow-sm disabled:opacity-70 disabled:cursor-not-allowed"
         >
           <svg
             width="20"
@@ -71,7 +72,7 @@ export default function LoginPage() {
             />
           </svg>
 
-          <span>
+          <span className="text-gray-800">
             {isLoading
               ? "Signing in..."
               : "Continue with Google"}
@@ -79,9 +80,9 @@ export default function LoginPage() {
         </button>
 
         <div className="mt-8 text-center">
-          <p className="text-xs text-gray-400 uppercase tracking-wider leading-relaxed">
-            By continuing, you agree to our Terms of Service
-            and Privacy Policy.
+          <p className="text-xs text-gray-500 uppercase tracking-wider leading-relaxed">
+            By continuing, you agree to our Terms of
+            Service and Privacy Policy.
           </p>
         </div>
       </div>
