@@ -1,36 +1,116 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# AI Real Chat - Frontend
 
-## Getting Started
+Frontend application for AI Real Chat built with Next.js, React, TypeScript, and Tailwind CSS.
 
-First, run the development server:
+## Live URL
+https://ai-realtime-chat-frontend.vercel.app
+
+---
+
+## Tech Stack
+
+- Next.js
+- React
+- TypeScript
+- Tailwind CSS
+- Socket.IO Client
+- Razorpay Checkout
+- Google OAuth Redirect Flow
+
+---
+
+## Features
+
+- Google Login Authentication
+- Real-time Chat UI
+- Instant Message Updates
+- AI Reply Suggestions
+- Premium Upgrade Flow
+- Responsive Design
+- User Profile Display
+
+---
+
+## State Management
+
+This project uses **Prop Drilling** because the application is small and lightweight.
+
+For larger-scale applications with complex shared state, we would use:
+
+- Redux Toolkit
+- Context API
+- Zustand
+
+Prop drilling was chosen here to keep the code simple, clean, and easy to maintain for this assignment.
+
+---
+
+## Project Structure
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+src/
+components/
+app/
+lib/
+public/
+
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Environment Variables
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Create a .env.local file:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+NEXT_PUBLIC_API_URL=https://your-backend-url.onrender.com/api
+NEXT_PUBLIC_GOOGLE_AUTH_URL=https://your-backend-url.onrender.com/auth/google
+NEXT_PUBLIC_RAZORPAY_KEY_ID=your_key_here
+Installation
+npm install
+Run Development Server
+npm run dev
 
-## Learn More
+Application runs on:
 
-To learn more about Next.js, take a look at the following resources:
+http://localhost:3000
+Production Build
+npm run build
+npm start
+Main Pages
+Login Page
+Google OAuth Sign In
+Clean responsive UI
+Chat Page
+Real-time Messaging
+Sidebar Users & Chats
+AI Suggestion Button
+Premium Badge
+Scrollable Chat Area
+Header
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Displays logged-in user:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Name
+Email
+Avatar
+Real-Time Features
 
-## Deploy on Vercel
+Socket.IO is used for:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Sending messages
+Receiving messages
+AI suggestions
+Premium updates after payment
+Payment Flow
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Free users can upgrade to Premium using Razorpay:
+
+Create Order
+Open Checkout
+Payment Success
+Premium Activated Instantly
+Future Improvements
+Redux Toolkit
+Group Chat
+Notifications
+Typing Indicator
+File Sharing
+Dark Mode
