@@ -15,56 +15,62 @@ export default function AIButton({
   message,
   onLocked,
 }: Props) {
-  const handleAI = async () => {
+const handleAI = async () => {
+  // Premium user
+  if (isPremium) {
     if (!message.trim()) return;
 
-    // Premium user -> ask AI
-    if (isPremium) {
-      getSocket()?.emit("get_suggestions", { text: message });
-      return;
-    }
+    getSocket()?.emit("get_suggestions", {
+      text: message,
+    });
+    return;
+  }
 
-    // Non premium -> open payment
-    const loaded = await loadRazorpay();
-    if (!loaded) {
-      alert("Razorpay SDK failed to load");
-      return;
-    }
+  // Free user => direct payment
+  const loaded = await loadRazorpay();
 
-    const data = await createOrder(99); // ₹99
-    const order = data.order;
+  if (!loaded) {
+    alert("Razorpay SDK failed to load");
+    return;
+  }
 
-    const options = {
-      key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
-      amount: order.amount,
-      currency: order.currency,
-      name: "Nexus Chat",
-      description: "Upgrade to Premium",
-      order_id: order.id,
+  const data = await createOrder(99);
+  const order = data.order;
 
-      handler: async function (response: any) {
-        const verify = await verifyPayment(response);
+  const options = {
+    key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
+    amount: order.amount,
+    currency: order.currency,
+    name: "Nexus Chat",
+    description: "Upgrade to Premium",
+    order_id: order.id,
 
-        if (verify.success) {
-          alert("Premium activated 🚀");
+    handler: async function (response: any) {
+      const verify = await verifyPayment(response);
 
-          getSocket()?.emit("check_premium");
+      if (verify.success) {
+        alert("Premium activated 🚀");
 
-          // auto trigger AI after upgrade
-          getSocket()?.emit("get_suggestions", { text: message });
+        getSocket()?.emit("check_premium");
+
+        if (message.trim()) {
+          getSocket()?.emit("get_suggestions", {
+            text: message,
+          });
         }
-      },
+      }
+    },
 
-      theme: {
-        color: "#6366f1",
-      },
-    };
-
-    const razor = new window.Razorpay(options);
-    razor.open();
-
-    onLocked?.();
+    theme: {
+      color: "#6366f1",
+    },
   };
+
+  const razor = new window.Razorpay(options);
+  razor.open();
+
+  onLocked?.();
+};
 
   return (
     <button
