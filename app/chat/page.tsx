@@ -1,4 +1,3 @@
-// app/chat/page.tsx
 "use client";
 
 import { useEffect, useRef, useState } from "react";
@@ -41,19 +40,18 @@ export default function ChatPage() {
   const bottomRef = useRef<HTMLDivElement | null>(null);
 
   const [user, setUser] = useState<User | null>(null);
-
   const [users, setUsers] = useState<ChatItem[]>([]);
   const [chats, setChats] = useState<ChatItem[]>([]);
 
   const [activeTab, setActiveTab] = useState<"chats" | "users">("chats");
-  const [selectedChat, setSelectedChat] = useState<string>("");
+  const [selectedChat, setSelectedChat] = useState("");
 
   const [messages, setMessages] = useState<Message[]>([]);
-  const [message, setMessage] = useState<string>("");
+  const [message, setMessage] = useState("");
 
-  const [premium, setPremium] = useState<boolean>(false);
+  const [premium, setPremium] = useState(false);
   const [suggestions, setSuggestions] = useState<string[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
+  const [loading, setLoading] = useState(true);
 
   // =====================================================
   // HELPERS
@@ -72,7 +70,6 @@ export default function ChatPage() {
       const token = localStorage.getItem("auth_token");
 
       const res = await fetch(`${API_URL}/messages/sidebar`, {
-        method: "GET",
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -90,19 +87,18 @@ export default function ChatPage() {
         });
       }
     } catch (error) {
-      console.error("Sidebar chats error:", error);
+      console.error("Sidebar error:", error);
     }
   };
 
   // =====================================================
-  // LOAD ALL USERS
+  // LOAD USERS
   // =====================================================
   const loadUsers = async () => {
     try {
       const token = localStorage.getItem("auth_token");
 
       const res = await fetch(`${API_URL}/user/all`, {
-        method: "GET",
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -127,12 +123,12 @@ export default function ChatPage() {
         setUsers(formatted);
       }
     } catch (error) {
-      console.error("Users load error:", error);
+      console.error("Users error:", error);
     }
   };
 
   // =====================================================
-  // LOAD CHAT HISTORY
+  // LOAD MESSAGES
   // =====================================================
   const loadMessages = async (receiverId: string) => {
     try {
@@ -140,15 +136,11 @@ export default function ChatPage() {
 
       const token = localStorage.getItem("auth_token");
 
-      const res = await fetch(
-        `${API_URL}/messages/${String(receiverId)}`,
-        {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const res = await fetch(`${API_URL}/messages/${receiverId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
       const data = await res.json();
 
@@ -168,13 +160,13 @@ export default function ChatPage() {
         setMessages([]);
       }
     } catch (error) {
-      console.error("Load messages error:", error);
+      console.error("Messages error:", error);
       setMessages([]);
     }
   };
 
   // =====================================================
-  // INIT APP (RUN ONCE)
+  // INIT APP
   // =====================================================
   useEffect(() => {
     const token = localStorage.getItem("auth_token");
@@ -214,79 +206,53 @@ export default function ChatPage() {
         });
 
         socket.on("message_sent", (data: any) => {
-          setMessages((prev) => {
-            const exists = prev.some(
-              (msg) => msg.id === data._id
-            );
-            if (exists) return prev;
-
-            return [
-              ...prev,
-              {
-                id: data._id,
-                text: data.message,
-                sender: "user",
-                timestamp: formatTime(data.createdAt),
-              },
-            ];
-          });
+          setMessages((prev) => [
+            ...prev,
+            {
+              id: data._id,
+              text: data.message,
+              sender: "user",
+              timestamp: formatTime(data.createdAt),
+            },
+          ]);
 
           loadSidebarChats();
         });
 
         socket.on("receive_message", (data: any) => {
-          setMessages((prev) => {
-            const exists = prev.some(
-              (msg) => msg.id === data._id
-            );
-            if (exists) return prev;
-
-            if (
-              String(data.senderId) === String(selectedChat) ||
-              String(data.receiverId) === String(selectedChat)
-            ) {
-              return [
-                ...prev,
-                {
-                  id: data._id,
-                  text: data.message,
-                  sender: "other",
-                  timestamp: formatTime(data.createdAt),
-                },
-              ];
-            }
-
-            return prev;
-          });
+          if (
+            String(data.senderId) === String(selectedChat) ||
+            String(data.receiverId) === String(selectedChat)
+          ) {
+            setMessages((prev) => [
+              ...prev,
+              {
+                id: data._id,
+                text: data.message,
+                sender: "other",
+                timestamp: formatTime(data.createdAt),
+              },
+            ]);
+          }
 
           loadSidebarChats();
         });
 
         socket.on("suggestions", (data: any) => {
-          setSuggestions(
-            Array.isArray(data) ? data : [data]
-          );
+          setSuggestions(Array.isArray(data) ? data : [data]);
         });
 
         setLoading(false);
-
-        return () => {
-          socket.off("premium_status");
-          socket.off("message_sent");
-          socket.off("receive_message");
-          socket.off("suggestions");
-          socket.disconnect();
-        };
       } catch (error) {
         router.push("/");
       }
     };
 
     init();
-  }, [router]);
+  }, [router, selectedChat]);
 
   // =====================================================
-  // LOAD CHAT WHEN SELECTED CHAT CHANGES
+  // LOAD CHAT HISTORY
   // =====================================================
   useEffect(() => {
     if (selectedChat && user) {
@@ -298,24 +264,17 @@ export default function ChatPage() {
   // AUTO SCROLL
   // =====================================================
   useEffect(() => {
-    bottomRef.current?.scrollIntoView({
-      behavior: "smooth",
-    });
+    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
   // =====================================================
-  // START CHAT FROM USERS TAB
+  // SELECT USER
   // =====================================================
   const handleSelectUser = (chatId: string) => {
-    const selectedUser = users.find(
-      (u) => u.id === chatId
-    );
-
+    const selectedUser = users.find((u) => u.id === chatId);
     if (!selectedUser) return;
 
-    const exists = chats.find(
-      (c) => c.id === chatId
-    );
+    const exists = chats.find((c) => c.id === chatId);
 
     if (!exists) {
       setChats((prev) => [selectedUser, ...prev]);
@@ -326,7 +285,7 @@ export default function ChatPage() {
   };
 
   // =====================================================
-  // OPEN CHAT FROM CHATS TAB
+  // SELECT CHAT
   // =====================================================
   const handleSelectChat = (chatId: string) => {
     setSelectedChat(chatId);
@@ -349,9 +308,14 @@ export default function ChatPage() {
   };
 
   // =====================================================
-  // AI SUGGESTIONS
+  // AI BUTTON CLICK
   // =====================================================
   const handleSuggestions = () => {
+    if (!premium) {
+      alert("Upgrade to Premium to unlock AI suggestions 🚀");
+      return;
+    }
+
     if (!message.trim()) return;
 
     getSocket()?.emit("get_suggestions", {
@@ -414,19 +378,13 @@ export default function ChatPage() {
                 <h3 className="font-semibold text-gray-900">
                   {currentChat?.name || "Select Chat"}
                 </h3>
-                <p className="text-sm text-green-500">
-                  Online
-                </p>
+                <p className="text-sm text-green-500">Online</p>
               </div>
             </div>
 
-            <div>
-              <span className="text-sm font-medium">
-                {premium
-                  ? "Premium User"
-                  : "Free User"}
-              </span>
-            </div>
+            <span className="text-sm font-medium">
+              {premium ? "Premium User" : "Free User"}
+            </span>
           </div>
 
           {/* Messages */}
@@ -454,7 +412,6 @@ export default function ChatPage() {
                       }`}
                     >
                       <p>{msg.text}</p>
-
                       <p className="text-xs mt-1 opacity-70">
                         {msg.timestamp}
                       </p>
@@ -475,10 +432,8 @@ export default function ChatPage() {
                   {suggestions.map((item, index) => (
                     <button
                       key={index}
-                      onClick={() =>
-                        setMessage(item)
-                      }
-                      className="px-3 py-1 bg-gray-100 rounded-full text-sm hover:bg-gray-200"
+                      onClick={() => setMessage(item)}
+                      className="px-3 py-1 bg-gray-100 rounded-full text-sm hover:bg-gray-200 transition cursor-pointer"
                     >
                       {item}
                     </button>
@@ -498,10 +453,22 @@ export default function ChatPage() {
                     handleSendMessage()
                   }
                   placeholder="Type a message..."
-                  className="flex-1 px-4 py-2 bg-gray-100 rounded-full outline-none"
+                  className="flex-1 px-4 py-2 bg-gray-100 rounded-full outline-none focus:ring-2 focus:ring-blue-500"
                 />
 
-                <div onClick={handleSuggestions}>
+                <div
+                  onClick={handleSuggestions}
+                  className={`transition transform hover:scale-105 ${
+                    premium
+                      ? "cursor-pointer"
+                      : "cursor-not-allowed opacity-80"
+                  }`}
+                  title={
+                    premium
+                      ? "Get AI Suggestions"
+                      : "Upgrade to Premium"
+                  }
+                >
                   <AIButton
                     isPremium={premium}
                     message={message}
@@ -510,7 +477,7 @@ export default function ChatPage() {
 
                 <button
                   onClick={handleSendMessage}
-                  className="px-5 py-2 bg-blue-500 text-white rounded-full hover:bg-blue-600"
+                  className="px-5 py-2 bg-blue-500 text-white rounded-full hover:bg-blue-600 hover:scale-105 transition cursor-pointer"
                 >
                   Send
                 </button>
