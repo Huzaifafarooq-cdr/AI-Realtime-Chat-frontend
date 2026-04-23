@@ -59,21 +59,32 @@ public/
 ## Environment Variables
 
 Create a .env.local file:
-
+```bash
 NEXT_PUBLIC_API_URL=https://your-backend-url.onrender.com/api
 NEXT_PUBLIC_GOOGLE_AUTH_URL=https://your-backend-url.onrender.com/auth/google
 NEXT_PUBLIC_RAZORPAY_KEY_ID=your_key_here
-Installation
+```
+
+## Installation
+```bash
 npm install
-Run Development Server
+```
+
+## Run Development Server
+```bash
 npm run dev
-
-Application runs on:
-
+```
+## Application runs on:
+```bash
 http://localhost:3000
-Production Build
+```
+## Production Build
+```bash
 npm run build
+```
+```bash
 npm start
+```
 Main Pages
 Login Page
 Google OAuth Sign In
