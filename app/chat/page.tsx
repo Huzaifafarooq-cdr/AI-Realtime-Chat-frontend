@@ -386,160 +386,145 @@ export default function ChatPage() {
   // =====================================================
   // UI
   // =====================================================
-return (
-  <div className="h-screen bg-gray-50 flex flex-col overflow-hidden">
-    <Header user={user} />
+  return (
+    <div className="min-h-screen bg-gray-50 flex flex-col">
+      <Header user={user} />
 
-    <div className="flex flex-1 overflow-hidden">
-      <Navbar
-        user={user}
-        chats={currentList}
-        selectedChat={selectedChat}
-        activeTab={activeTab}
-        setActiveTab={setActiveTab}
-        onChatSelect={
-          activeTab === "users"
-            ? handleSelectUser
-            : handleSelectChat
-        }
-      />
+      <div className="flex flex-1">
+        <Navbar
+          user={user}
+          chats={currentList}
+          selectedChat={selectedChat}
+          activeTab={activeTab}
+          setActiveTab={setActiveTab}
+          onChatSelect={
+            activeTab === "users"
+              ? handleSelectUser
+              : handleSelectChat
+          }
+        />
 
-      {/* RIGHT SIDE */}
-      <div className="flex-1 flex flex-col overflow-hidden">
+        <div className="flex-1 flex flex-col">
+          {/* Header */}
+          <div className="bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              {currentChat && (
+                <img
+                  src={currentChat.avatar}
+                  alt="avatar"
+                  className="w-10 h-10 rounded-full"
+                />
+              )}
 
-        {/* HEADER */}
-        <div className="bg-white border-b px-6 py-4 flex items-center justify-between shrink-0">
-          <div className="flex items-center gap-3">
-            {currentChat && (
-              <img
-                src={currentChat.avatar}
-                className="w-10 h-10 rounded-full"
-              />
-            )}
-
-            <div>
-              <h3 className="font-semibold text-gray-900">
-                {currentChat?.name || "Select Chat"}
-              </h3>
-
-              <p className="text-xs text-green-500">
-                ● Online
-              </p>
-            </div>
-          </div>
-
-          {/* PREMIUM BADGE (IMPROVED) */}
-          <div
-            className={`px-3 py-1 rounded-full text-xs font-semibold ${
-              premium
-                ? "bg-gradient-to-r from-yellow-400 to-orange-500 text-white"
-                : "bg-gray-200 text-gray-600"
-            }`}
-          >
-            {premium ? "⭐ Premium" : "Free User"}
-          </div>
-        </div>
-
-        {/* MESSAGES AREA (ONLY SCROLLABLE PART) */}
-        <div className="flex-1 overflow-y-auto px-6 py-4 bg-gray-50">
-          <div className="max-w-3xl mx-auto space-y-3">
-
-            {messages.length === 0 ? (
-              <div className="text-center text-gray-400 mt-10">
-                No messages yet — start the conversation 🚀
+              <div>
+                <h3 className="font-semibold text-gray-900">
+                  {currentChat?.name || "Select Chat"}
+                </h3>
+                <p className="text-sm text-green-500">Online</p>
               </div>
-            ) : (
-              messages.map((msg) => (
-                <div
-                  key={msg.id}
-                  className={`flex ${
-                    msg.sender === "user"
-                      ? "justify-end"
-                      : "justify-start"
-                  }`}
-                >
+            </div>
+
+            <span className="text-sm font-medium">
+              {premium ? "Premium User" : "Free User"}
+            </span>
+          </div>
+
+          {/* Messages */}
+          <div className="flex-1 overflow-y-auto p-6 bg-gray-50">
+            <div className="max-w-3xl mx-auto space-y-4">
+              {messages.length === 0 ? (
+                <p className="text-center text-gray-400">
+                  No messages yet. Start chatting 🚀
+                </p>
+              ) : (
+                messages.map((msg) => (
                   <div
-                    className={`px-4 py-2 rounded-2xl max-w-xs break-words shadow-sm ${
+                    key={msg.id}
+                    className={`flex ${
                       msg.sender === "user"
-                        ? "bg-blue-500 text-white"
-                        : "bg-white text-gray-800 border"
+                        ? "justify-end"
+                        : "justify-start"
                     }`}
                   >
-                    <p className="text-sm">{msg.text}</p>
-                    <p className="text-[10px] opacity-60 mt-1 text-right">
-                      {msg.timestamp}
-                    </p>
+                    <div
+                      className={`max-w-xs px-4 py-2 rounded-2xl ${
+                        msg.sender === "user"
+                          ? "bg-blue-500 text-white"
+                          : "bg-gray-200 text-gray-900"
+                      }`}
+                    >
+                      <p>{msg.text}</p>
+                      <p className="text-xs mt-1 opacity-70">
+                        {msg.timestamp}
+                      </p>
+                    </div>
                   </div>
-                </div>
-              ))
-            )}
+                ))
+              )}
 
-            <div ref={bottomRef}></div>
-          </div>
-        </div>
-
-        {/* INPUT AREA (FIXED BOTTOM STYLE) */}
-        <div className="bg-white border-t px-6 py-4 shrink-0">
-          <div className="max-w-3xl mx-auto space-y-2">
-
-            {/* AI SUGGESTIONS */}
-            {suggestions.length > 0 && (
-              <div className="flex flex-wrap gap-2">
-                {suggestions.map((item, index) => (
-                  <button
-                    key={index}
-                    onClick={() => setMessage(item)}
-                    className="px-3 py-1 text-xs bg-gray-100 rounded-full hover:bg-gray-200 transition"
-                  >
-                    {item}
-                  </button>
-                ))}
-              </div>
-            )}
-
-            {/* INPUT ROW */}
-            <div className="flex gap-2 items-center">
-
-              <input
-                type="text"
-                value={message}
-                onChange={(e) => setMessage(e.target.value)}
-                onKeyDown={(e) =>
-                  e.key === "Enter" && handleSendMessage()
-                }
-                placeholder="Type a message..."
-                className="flex-1 px-4 py-2 bg-gray-100 rounded-full outline-none focus:ring-2 focus:ring-blue-500"
-              />
-
-              {/* AI BUTTON (FREE vs PREMIUM UI) */}
-              <div
-                onClick={handleSuggestions}
-                className={`transition ${
-                  premium
-                    ? "cursor-pointer hover:scale-110"
-                    : "opacity-50 cursor-not-allowed"
-                }`}
-              >
-                <AIButton
-                  isPremium={premium}
-                  message={message}
-                />
-              </div>
-
-              {/* SEND */}
-              <button
-                onClick={handleSendMessage}
-                className="px-5 py-2 bg-blue-500 text-white rounded-full hover:bg-blue-600 transition"
-              >
-                Send
-              </button>
+              <div ref={bottomRef}></div>
             </div>
+          </div>
 
+          {/* Input */}
+          <div className="bg-white border-t border-gray-200 px-6 py-4">
+            <div className="max-w-3xl mx-auto space-y-2">
+              {suggestions.length > 0 && (
+                <div className="flex flex-wrap gap-2">
+                  {suggestions.map((item, index) => (
+                    <button
+                      key={index}
+                      onClick={() => setMessage(item)}
+                      className="px-3 py-1 bg-gray-100 rounded-full text-sm hover:bg-gray-200 transition cursor-pointer"
+                    >
+                      {item}
+                    </button>
+                  ))}
+                </div>
+              )}
+
+              <div className="flex gap-2">
+                <input
+                  type="text"
+                  value={message}
+                  onChange={(e) => setMessage(e.target.value)}
+                  onKeyDown={(e) =>
+                    e.key === "Enter" && handleSendMessage()
+                  }
+                  placeholder="Type a message..."
+                  className="flex-1 px-4 py-2 bg-gray-100 rounded-full outline-none focus:ring-2 focus:ring-blue-500"
+                />
+
+                <div
+                  onClick={handleSuggestions}
+                  className={`transition transform hover:scale-110 ${
+                    premium
+                      ? "cursor-pointer"
+                      : "cursor-not-allowed opacity-80"
+                  }`}
+                  title={
+                    premium
+                      ? "AI Auto Suggestions Enabled"
+                      : "Upgrade to Premium"
+                  }
+                >
+                  <AIButton
+                    isPremium={premium}
+                    message={message}
+                  />
+                </div>
+
+                <button
+                  onClick={handleSendMessage}
+                  className="px-5 py-2 bg-blue-500 text-white rounded-full hover:bg-blue-600 hover:scale-105 transition cursor-pointer"
+                >
+                  Send
+                </button>
+              </div>
+            </div>
           </div>
         </div>
-
       </div>
     </div>
-  </div>
-);
+  );
 }
