@@ -206,38 +206,52 @@ export default function ChatPage() {
           setPremium(data.isPremium);
         });
 
-        socket.on("message_sent", (data: any) => {
-          setMessages((prev) => [
-            ...prev,
-            {
-              id: data._id,
-              text: data.message,
-              sender: "user",
-              timestamp: formatTime(data.createdAt),
-            },
-          ]);
+  socket.on("message_sent", (data: any) => {
+  setMessages((prev) => {
+    const exists = prev.some((msg) => msg.id === data._id);
 
-          loadSidebarChats();
-        });
+    if (exists) return prev;
 
-        socket.on("receive_message", (data: any) => {
-          if (
-            String(data.senderId) === String(selectedChat) ||
-            String(data.receiverId) === String(selectedChat)
-          ) {
-            setMessages((prev) => [
-              ...prev,
-              {
-                id: data._id,
-                text: data.message,
-                sender: "other",
-                timestamp: formatTime(data.createdAt),
-              },
-            ]);
-          }
+    return [
+      ...prev,
+      {
+        id: data._id,
+        text: data.message,
+        sender: "user",
+        timestamp: formatTime(data.createdAt),
+      },
+    ];
+  });
 
-          loadSidebarChats();
-        });
+  loadSidebarChats();
+});
+
+    socket.on("receive_message", (data: any) => {
+  setMessages((prev) => {
+    const exists = prev.some((msg) => msg.id === data._id);
+
+    if (exists) return prev;
+
+    if (
+      String(data.senderId) === String(selectedChat) ||
+      String(data.receiverId) === String(selectedChat)
+    ) {
+      return [
+        ...prev,
+        {
+          id: data._id,
+          text: data.message,
+          sender: "other",
+          timestamp: formatTime(data.createdAt),
+        },
+      ];
+    }
+
+    return prev;
+  });
+
+  loadSidebarChats();
+});
 
         socket.on("suggestions", (data: any) => {
           setSuggestions(Array.isArray(data) ? data : [data]);
@@ -323,17 +337,17 @@ export default function ChatPage() {
   // =====================================================
   // SEND MESSAGE
   // =====================================================
-  const handleSendMessage = () => {
-    if (!message.trim() || !selectedChat) return;
+ const handleSendMessage = () => {
+  if (!message.trim() || !selectedChat) return;
 
-    getSocket()?.emit("send_message", {
-      receiverId: selectedChat,
-      message,
-    });
+  getSocket()?.emit("send_message", {
+    receiverId: selectedChat,
+    message,
+  });
 
-    setMessage("");
-    setSuggestions([]);
-  };
+  setMessage("");
+  setSuggestions([]);
+};
 
   // =====================================================
   // MANUAL AI CLICK (FREE USER)
