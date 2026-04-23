@@ -16,19 +16,8 @@ export default function LoginPage() {
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-slate-100 flex items-center justify-center px-4">
       <div className="w-full max-w-md bg-white rounded-3xl shadow-xl border border-gray-200 p-8">
         <div className="flex flex-col items-center text-center mb-8">
-          <div className="w-20 h-20 bg-blue-500 rounded-3xl flex items-center justify-center shadow-lg mb-6">
-            <svg
-              width="42"
-              height="42"
-              viewBox="0 0 64 64"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M16 20C16 17.7909 17.7909 16 20 16H44C46.2091 16 48 17.7909 48 20V36C48 38.2091 46.2091 40 44 40H28L20 48V40C17.7909 40 16 38.2091 16 36V20Z"
-                fill="white"
-              />
-            </svg>
+  <div className="w-10 h-10 rounded-xl bg-blue-500 flex items-center justify-center text-white font-bold">
+            AI
           </div>
 
           <h1 className="text-4xl font-bold text-gray-900">
