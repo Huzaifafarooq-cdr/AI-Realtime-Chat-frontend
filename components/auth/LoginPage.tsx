@@ -1,54 +1,51 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
+import { useState } from "react";
 
 export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false);
 
-const handleGoogleSignIn = () => {
-  window.location.href =
-    "https://ai-realtime-chat-backend-4r7n.onrender.com/auth/google";
-};
+  const handleGoogleSignIn = () => {
+    setIsLoading(true);
+
+    window.location.href =
+      "https://ai-realtime-chat-backend-4r7n.onrender.com/auth/google";
+  };
 
   return (
-    <div className="min-h-screen bg-white flex flex-col items-center justify-center px-4">
-      <div className="w-full max-w-md">
-        {/* Logo and Brand */}
-        <div className="flex flex-col items-center mb-8">
-          {/* Blue speech bubble icon */}
-          <div className="w-16 h-16 bg-blue-500 rounded-2xl flex items-center justify-center mb-6 relative">
-            <div className="absolute inset-0 bg-blue-500 rounded-2xl">
-              <svg
-                width="64"
-                height="64"
-                viewBox="0 0 64 64"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M16 20C16 17.7909 17.7909 16 20 16H44C46.2091 16 48 17.7909 48 20V36C48 38.2091 46.2091 40 44 40H28L20 48V40C17.7909 40 16 38.2091 16 36V20Z"
-                  fill="white"
-                />
-              </svg>
-            </div>
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50 flex items-center justify-center px-4">
+      <div className="w-full max-w-md bg-white rounded-3xl shadow-xl border border-gray-100 p-8">
+        <div className="flex flex-col items-center text-center mb-8">
+          <div className="w-20 h-20 bg-blue-500 rounded-3xl flex items-center justify-center shadow-lg mb-6">
+            <svg
+              width="42"
+              height="42"
+              viewBox="0 0 64 64"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M16 20C16 17.7909 17.7909 16 20 16H44C46.2091 16 48 17.7909 48 20V36C48 38.2091 46.2091 40 44 40H28L20 48V40C17.7909 40 16 38.2091 16 36V20Z"
+                fill="white"
+              />
+            </svg>
           </div>
-          
-          {/* Nexus title */}
-          <h1 className="text-4xl font-bold text-gray-900 mb-2">Nexus</h1>
-          
-          {/* Tagline */}
-          <p className="text-gray-600 text-center leading-relaxed">
-            Beautiful communication for<br />modern teams.
+
+          <h1 className="text-4xl font-bold text-gray-900">
+            AI Real Chat
+          </h1>
+
+          <p className="text-gray-500 mt-3 leading-relaxed">
+            Smart real-time messaging with beautiful conversations,
+            AI replies, and modern team communication.
           </p>
         </div>
 
-        {/* Google Sign In Button */}
         <button
           onClick={handleGoogleSignIn}
           disabled={isLoading}
-          className="w-full flex items-center justify-center gap-3 px-4 py-3 bg-white border border-gray-300 rounded-lg shadow-sm hover:bg-gray-50 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+          className="w-full flex items-center justify-center gap-3 px-4 py-3 rounded-xl border border-gray-300 bg-white hover:bg-gray-50 transition font-medium shadow-sm disabled:opacity-60 disabled:cursor-not-allowed"
         >
-          {/* Google Logo */}
           <svg
             width="20"
             height="20"
@@ -73,16 +70,18 @@ const handleGoogleSignIn = () => {
               fill="#EA4335"
             />
           </svg>
-          
-          <span className="text-gray-700 font-medium">
-            {isLoading ? 'Signing in...' : 'Continue with Google'}
+
+          <span>
+            {isLoading
+              ? "Signing in..."
+              : "Continue with Google"}
           </span>
         </button>
 
-        {/* Legal Disclaimer */}
         <div className="mt-8 text-center">
-          <p className="text-xs text-gray-500 uppercase tracking-wider">
-            BY CONTINUING, YOU AGREE TO OUR TERMS & PRIVACY.
+          <p className="text-xs text-gray-400 uppercase tracking-wider leading-relaxed">
+            By continuing, you agree to our Terms of Service
+            and Privacy Policy.
           </p>
         </div>
       </div>
