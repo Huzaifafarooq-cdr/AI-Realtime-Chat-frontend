@@ -1,3 +1,4 @@
+// components/layout/Navbar.tsx
 "use client";
 
 import { useState } from "react";
@@ -20,32 +21,26 @@ interface Chat {
 
 interface NavbarProps {
   user: User;
-  users: Chat[];
   chats: Chat[];
   selectedChat: string;
-  onChatSelect: (chatId: string) => void;
+  activeTab: "chats" | "users";
+  setActiveTab: (tab: "chats" | "users") => void;
+  onChatSelect: (chat: any) => void;
 }
 
 export default function Navbar({
   user,
-  users,
   chats,
   selectedChat,
+  activeTab,
+  setActiveTab,
   onChatSelect,
 }: NavbarProps) {
   const router = useRouter();
-
-  const [activeTab, setActiveTab] = useState<"chats" | "users">("users");
   const [searchQuery, setSearchQuery] = useState("");
 
-  // ✅ Keep same UI, only dynamic data source
-  const currentList =
-    activeTab === "users" ? users : chats;
-
-  const filteredList = currentList.filter((item) =>
-    item.name
-      .toLowerCase()
-      .includes(searchQuery.toLowerCase())
+  const filteredChats = chats.filter((chat) =>
+    chat.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   const handleLogout = () => {
@@ -57,9 +52,7 @@ export default function Navbar({
     <div className="w-80 bg-white border-r border-gray-200 flex flex-col">
       {/* Header */}
       <div className="px-4 pt-4">
-        <h2 className="text-lg font-semibold text-gray-900">
-          Messages
-        </h2>
+        <h2 className="text-lg font-semibold text-gray-900">Messages</h2>
       </div>
 
       {/* Tabs */}
@@ -99,32 +92,26 @@ export default function Navbar({
               : "Search users..."
           }
           value={searchQuery}
-          onChange={(e) =>
-            setSearchQuery(e.target.value)
-          }
+          onChange={(e) => setSearchQuery(e.target.value)}
           className="w-full px-4 py-2 bg-gray-100 rounded-lg text-sm outline-none"
         />
       </div>
 
       {/* List */}
       <div className="flex-1 overflow-y-auto mt-4">
-        {filteredList.length === 0 ? (
+        {filteredChats.length === 0 ? (
           <p className="text-center text-sm text-gray-400 mt-6">
-            {activeTab === "users"
-              ? "No users found"
-              : "No chats yet"}
+            {activeTab === "chats"
+              ? "No chats yet"
+              : "No users found"}
           </p>
         ) : (
-          filteredList.map((chat) => (
+          filteredChats.map((chat) => (
             <div
               key={chat.id}
-              onClick={() =>
-                onChatSelect(chat.id)
-              }
+              onClick={() => onChatSelect(chat)}
               className={`flex items-center gap-3 p-4 cursor-pointer hover:bg-gray-50 ${
-                selectedChat === chat.id
-                  ? "bg-blue-50"
-                  : ""
+                selectedChat === chat.id ? "bg-blue-50" : ""
               }`}
             >
               <img
@@ -139,12 +126,11 @@ export default function Navbar({
                     {chat.name}
                   </p>
 
-                  {activeTab === "chats" &&
-                    chat.time && (
-                      <span className="text-xs text-gray-500">
-                        {chat.time}
-                      </span>
-                    )}
+                  {activeTab === "chats" && chat.time && (
+                    <span className="text-xs text-gray-500">
+                      {chat.time}
+                    </span>
+                  )}
                 </div>
 
                 <p
@@ -156,17 +142,15 @@ export default function Navbar({
                 >
                   {activeTab === "users"
                     ? "Start chat"
-                    : chat.lastMessage ||
-                      "No messages"}
+                    : chat.lastMessage || "No messages"}
                 </p>
               </div>
 
-              {activeTab === "chats" &&
-                chat.unread > 0 && (
-                  <div className="w-5 h-5 bg-blue-500 text-white rounded-full flex items-center justify-center text-xs font-medium">
-                    {chat.unread}
-                  </div>
-                )}
+              {activeTab === "chats" && chat.unread > 0 && (
+                <div className="w-5 h-5 bg-blue-500 text-white rounded-full flex items-center justify-center text-xs">
+                  {chat.unread}
+                </div>
+              )}
             </div>
           ))
         )}
