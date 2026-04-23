@@ -168,13 +168,13 @@ export default function Navbar({
             </p>
           </div>
 
-          <button
-            onClick={handleLogout}
-            className="text-gray-400 hover:text-red-500 transition text-lg"
-            title="Logout"
-          >
-            →
-          </button>
+<button
+  onClick={handleLogout}
+  title="Logout"
+  className="w-10 h-10 flex items-center justify-center rounded-full bg-gradient-to-r from-red-500 to-pink-500 text-white shadow-md hover:shadow-lg hover:scale-110 hover:from-red-600 hover:to-pink-600 transition-all duration-200"
+>
+  ↗
+</button>
         </div>
       </div>
     </div>
